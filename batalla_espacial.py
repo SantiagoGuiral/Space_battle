@@ -50,12 +50,12 @@ FPS = 60	# Establece la tasa máxima de refreso del juego
 
 # Variables para especificar el texto
 HEALTH_FONT = pygame.font.SysFont('comicsans', 40)	# Texto que indica la vida de los participantes
-WINNER_FONT = pygame.font.SysFont('comicsans', 70)	# Texto que indica el ganador del juego
+WINNER_FONT = pygame.font.SysFont('comicsans', 80)	# Texto que indica el ganador del juego
 
 # Variables para especificar colores
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Variables para las interacciones de los jugadores
@@ -65,20 +65,20 @@ BULLET_VEL = 25	# Velocidad de los proyectiles disparados
 MAX_BULLETS = 1 # Cantidad de proyectiles simultaneamente disparados por una nave
 
 # Variables para el posicionamiento de los jugadores
-x_yellow = 0	# Posición del centroide para controlar el movimiento horizontal de la nave amarilla
-y_yellow = 0	# Posición del centroide para controlar el movimiento vertical de la nave amarilla
+x_green = 0	# Posición del centroide para controlar el movimiento horizontal de la nave verde
+y_green = 0	# Posición del centroide para controlar el movimiento vertical de la nave verde
 x_red = 0	# Posición del centroide para controlar el movimiento horizontal de la nave roja
 y_red = 0	# Posición del centroide para controlar el movimiento vertical  de la nave roja
-area_yellow = 0 # Área de la nave amarilla
+area_green = 0 # Área de la nave verde
 area_red = 0 # Área de la nave roja
 
 # Variables para los eventos de las colisiones
-YELLOW_HIT = pygame.USEREVENT + 1	# Evento que identifica un impacto contra la nave amarilla
+GREEN_HIT = pygame.USEREVENT + 1	# Evento que identifica un impacto contra la nave verde
 RED_HIT = pygame.USEREVENT + 2	# Evento que identifica un impacto contra la nave roja
 
 # Variables para cargar las imágenes en la ventana del juego
-YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Images', 'spaceship_yellow.png'))	# Nave amarilla
-YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90) # Cambia el tamaño de la nave amarilla
+GREEN_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Images', 'spaceship_green.png'))	# Nave verde
+GREEN_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(GREEN_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90) # Cambia el tamaño de la nave verde
 
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Images', 'spaceship_red.png'))	# Nave roja
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 90)	# Cambia el tamaño de la nave roja
@@ -98,7 +98,7 @@ kernel = np.ones((5, 5), np.uint8)	# Estructura cuadrada para realizar el proces
 # ------------------------------------------------------------------------------
 
 
-def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health):
+def draw_window(red, green, red_bullets, green_bullets, red_health, green_health):
 	"""	Dibuja los objetos (imagen de fondo, texto, naves espaciales, proyectiles) que componen el juego en su ventana 
 	principal usando las propiedades de Pygame.	Los objetos se actualizan en su posición de acuerdo a la tasa de refresco definida.
 	"""
@@ -108,39 +108,39 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
 	
 	# Dibuja los textos que indican la vida de ambos jugadores
 	red_health_text = HEALTH_FONT.render("Salud: " + str(red_health), 1, WHITE)
-	yellow_health_text = HEALTH_FONT.render("Salud: " + str(yellow_health), 1, WHITE)
+	green_health_text = HEALTH_FONT.render("Salud: " + str(green_health), 1, WHITE)
 	WIN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10))
-	WIN.blit(yellow_health_text, (10, 10))
+	WIN.blit(green_health_text, (10, 10))
 
 	# Dibuja las naves espaciales
-	WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
+	WIN.blit(GREEN_SPACESHIP, (green.x, green.y))
 	WIN.blit(RED_SPACESHIP, (red.x, red.y))
 
 	# Dibuja los proyectiles disparados por la nave roja
 	for bullet in red_bullets:
 		pygame.draw.rect(WIN, RED, bullet)
 	
-	# Dibuja los proyectiles disparados por la nave amarilla
-	for bullet in yellow_bullets:
-		pygame.draw.rect(WIN, YELLOW, bullet)
+	# Dibuja los proyectiles disparados por la nave verde
+	for bullet in green_bullets:
+		pygame.draw.rect(WIN, GREEN, bullet)
 
 	pygame.display.update()	# Actualiza la imagen en la ventana de juego
 
 
-def yellow_handle_movement(yellow, x_yellow, y_yellow):
-	"""	Controla el movimiento y la posición de la nave amarilla. Recibe como parametros el rectangulo que representa la nave
-	y las coordenadas horizontal y vertical del centroide correspondiente al objeto de color amarilla que es identificado 
+def green_handle_movement(green, x_green, y_green):
+	"""	Controla el movimiento y la posición de la nave verde. Recibe como parametros el rectangulo que representa la nave
+	y las coordenadas horizontal y vertical del centroide correspondiente al objeto de color verde que es identificado 
 	por la cámara. Se asigna los valores de coordenadas del centroide a la nave para su movimiento.
 	"""
 
 	# Establece los límites horizontales donde la nave puede moverse
-	if ((x_yellow > 0) and (x_yellow < BORDER.x - BORDER.width - yellow.width//2)):
-		yellow.x = int(x_yellow * SCALE_WIDTH)
+	if ((x_green > 0) and (x_green < BORDER.x - BORDER.width - green.width//2)):
+		green.x = int(x_green * SCALE_WIDTH)
 
 	# Establece los límites verticales donde la nave puede moverse
-	if ((y_yellow + yellow.height > 0) and (y_yellow < HEIGHT - yellow.height - 10)):
-		if ((x_yellow > 0) and (x_yellow < BORDER.x - BORDER.width - yellow.width//2)):
-			yellow.y = int(y_yellow * SCALE_HEIGHT)
+	if ((y_green + green.height > 0) and (y_green < HEIGHT - green.height - 10)):
+		if ((x_green > 0) and (x_green < BORDER.x - BORDER.width - green.width//2)):
+			green.y = int(y_green * SCALE_HEIGHT)
 
 
 def red_handle_movement(red, x_red, y_red):
@@ -159,26 +159,26 @@ def red_handle_movement(red, x_red, y_red):
 			red.y = int(y_red * SCALE_HEIGHT)
 
 
-def handle_bullets(yellow_bullets, red_bullets, yellow, red):
+def handle_bullets(green_bullets, red_bullets, green, red):
 	"""	Controla el estado de los proyectiles disparados por las naves. Recibe como entrada una lista con los
 	proyectiles activos dentro de la ventana y de esta forma revisa cuando los proyectiles pueden ser eliminados de la ventana.
 	Los proyectiles se eliminan cuando chocan con una nave o salen del recuadro de juego.
 	"""
 
 	# Remueve los proyectiles cuando chocan contra la nave roja o si salen de la ventana de juego
-	for bullet in yellow_bullets:
+	for bullet in green_bullets:
 		bullet.x += BULLET_VEL
 		if red.colliderect(bullet):	# Revisa si hay una colisión para generar un evento
 			pygame.event.post(pygame.event.Event(RED_HIT))	# Decrementa la salud de la nave roja
-			yellow_bullets.remove(bullet)
+			green_bullets.remove(bullet)
 		elif bullet.x > WIDTH:
-			yellow_bullets.remove(bullet)
+			green_bullets.remove(bullet)
 
-	# Remueve los proyectiles cuando chocan contra la nave amarilla o si salen de la ventana de juego
+	# Remueve los proyectiles cuando chocan contra la nave verde o si salen de la ventana de juego
 	for bullet in red_bullets:
 		bullet.x -= BULLET_VEL
-		if yellow.colliderect(bullet):	# Revisa si hay una colisión
-			pygame.event.post(pygame.event.Event(YELLOW_HIT))	# Decrementa la salud de la nave amarilla
+		if green.colliderect(bullet):	# Revisa si hay una colisión
+			pygame.event.post(pygame.event.Event(GREEN_HIT))	# Decrementa la salud de la nave verde
 			red_bullets.remove(bullet)
 		elif bullet.x < 0:
 			red_bullets.remove(bullet)
@@ -250,21 +250,21 @@ def main():
 	# Dibjua los objectos del juego en la ventana principal
 	init_window()
 
-	# Crea los objetos que representan las naves roja y amarilla
+	# Crea los objetos que representan las naves roja y verde
 	red = pygame.Rect(580, 60, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
-	yellow = pygame.Rect(60, 420, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+	green = pygame.Rect(60, 420, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
 	# Listas que almacenan los proyectiles activos
 	red_bullets = []
-	yellow_bullets = []
+	green_bullets = []
 
 	# Nivel de vida de las naves
 	red_health = 12
-	yellow_health = 12
+	green_health = 12
 
 	# Establece las posiciones iniciales de las naves
-	x_yellow = 60	# Posición inicial de la nave amarilla en el eje x
-	y_yellow = 420	# Posición inicial de la nave amarilla en el eje y
+	x_green = 60	# Posición inicial de la nave verde en el eje x
+	y_green = 420	# Posición inicial de la nave verde en el eje y
 	x_red = 580	# Posición inicial de la nave roja en el eje x
 	y_red = 60	# Posición inicial de la nave roja en el eje y
 
@@ -291,27 +291,27 @@ def main():
 
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	# Convierte la captura de la cámara del espacio RGB al espacio HSV
 			
-		low_red = np.array([165 ,95, 180])	# límite inferior para capturar el color rojo en el espacio HSV
-		high_red = np.array([200, 200, 250])	# límite superior para capturar el color rojo en el espacio HSV
+		low_red = np.array([165 , 100, 160])	# límite inferior para capturar el color rojo en el espacio HSV
+		high_red = np.array([200, 250, 250])	# límite superior para capturar el color rojo en el espacio HSV
 
-		low_yellow = np.array([20, 100, 180])# límite inferior para capturar el color amarilla en el espacio HSV
-		high_yellow = np.array([40, 255, 255])# límite superior para capturar el color amarilla en el espacio HSV
+		low_green = np.array([60, 75, 105])# límite inferior para capturar el color verde en el espacio HSV
+		high_green = np.array([90, 250, 250])# límite superior para capturar el color verde en el espacio HSV
 
 		red_mask = cv2.inRange(hsv, low_red, high_red)	# Máscara que identifica el rango de color rojo especificado - Binariza
 		red_mask = cv2.dilate(red_mask, kernel, iterations = 2)	# Dilata la imagen binarizada con una estructura cuadrada
 		red_mask = cv2.GaussianBlur(red_mask,(5, 5), 100)	# Elimina el ruido de los objetos rojos identificados
 
-		yellow_mask = cv2.inRange(hsv, low_yellow, high_yellow)	# Máscara que identifica el rango de color amarilla especificado - Binariza
-		yellow_mask = cv2.dilate(yellow_mask, kernel, iterations = 2)	# Dilata la imagen binarizada con una estructura cuadrada
-		yellow_mask = cv2.GaussianBlur(yellow_mask, (5, 5), 100)	# Elimina el ruido de los objetos amarillas identificados
+		green_mask = cv2.inRange(hsv, low_green, high_green)	# Máscara que identifica el rango de color verde especificado - Binariza
+		green_mask = cv2.dilate(green_mask, kernel, iterations = 2)	# Dilata la imagen binarizada con una estructura cuadrada
+		green_mask = cv2.GaussianBlur(green_mask, (5, 5), 100)	# Elimina el ruido de los objetos verdes identificados
 
-		contours_yellow, hierarchy1 = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)	# Obtiene los contornos de los objetos rojos
+		contours_green, hierarchy1 = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)	# Obtiene los contornos de los objetos rojos
 		
 		# Obtiene el objeto de mayor área para controlar la nave roja
-		if len(contours_yellow) != 0:
-			cnt1 = max(contours_yellow, key=lambda x: cv2.contourArea(x)) # Identifica el objeto rojo de mayor tamaño
+		if len(contours_green) != 0:
+			cnt1 = max(contours_green, key=lambda x: cv2.contourArea(x)) # Identifica el objeto rojo de mayor tamaño
 			area_red = cv2.contourArea(cnt1)	# Calcula el área del objeto 
-			if area_red > 1000:	# Umbral mínimo del objeto que mueve la nave roja
+			if area_red > 2000:	# Umbral mínimo del objeto que mueve la nave roja
 				M1 = cv2.moments(cnt1)	# Obtiene los momentos del objeto
 	
 				# Evita división por cero cuando no hay objeto detectado
@@ -327,26 +327,26 @@ def main():
 			cv2.drawContours(frame, cnt1, -1, (0, 0, 255), 1)	# Dibuja los contornos de los objetos detectado en el rango rojo HSV
 
 
-		contours_red, hierarchy2 = cv2.findContours(yellow_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)	# Obtiene los contornos de los objetos amarillos
+		contours_red, hierarchy2 = cv2.findContours(green_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)	# Obtiene los contornos de los objetos verdes
 
-		# Obtiene el objeto de mayor área para controlar la nave amarilla
+		# Obtiene el objeto de mayor área para controlar la nave verde
 		if len(contours_red) != 0:
-			cnt2 = max(contours_red, key=lambda x: cv2.contourArea(x))	# Identifica el objeto amarillo de mayor tamaño
-			area_yellow = cv2.contourArea(cnt2)	# Calcula el área del objeto
-			if area_yellow > 1000:	# Umbral mínimo del objeto que mueve la nave amarilla
+			cnt2 = max(contours_red, key=lambda x: cv2.contourArea(x))	# Identifica el objeto verde de mayor tamaño
+			area_green = cv2.contourArea(cnt2)	# Calcula el área del objeto
+			if area_green > 2000:	# Umbral mínimo del objeto que mueve la nave verde
 				M2 = cv2.moments(cnt2)
 
 				# Evita división por cero cuando no hay objeto detectado
 				if M2["m00"] == 0:
 					M2["m00"] == 1
 
-				# Obtiene el centroide del objeto amarillo detectado
-				x_yellow = int(M2["m10"]/M2["m00"]) # Coordenada del eje x objeto amarilla
-				y_yellow = int(M2["m01"]/M2["m00"]) # Coordenada del eje y objeto amarilla
+				# Obtiene el centroide del objeto verde detectado
+				x_green = int(M2["m10"]/M2["m00"]) # Coordenada del eje x objeto verde
+				y_green = int(M2["m01"]/M2["m00"]) # Coordenada del eje y objeto verde
 
-				cv2.circle(frame, (x_yellow, y_yellow), 5, (255, 0, 0), 2)	# Dibuja un circulo en el centroide del objeto amarilla
+				cv2.circle(frame, (x_green, y_green), 5, (255, 0, 0), 2)	# Dibuja un circulo en el centroide del objeto verde
 		
-			cv2.drawContours(frame, cnt2, -1, (0, 0, 255), 1)	# Dibuja los contornos de los objetos detectados en el rango amarilla HSV
+			cv2.drawContours(frame, cnt2, -1, (0, 0, 255), 1)	# Dibuja los contornos de los objetos detectados en el rango verde HSV
 
 		# ------------------------------------------------------------------------------
 		# 9. Eventos que controlan las interacciones en el juego -----------------------
@@ -363,9 +363,9 @@ def main():
 			if event.type == RED_HIT:
 				red_health-=1
 
-			# Evento que se activa cuando un proyectil colisiona con la nave amarilla
-			if event.type == YELLOW_HIT:
-				yellow_health-=1
+			# Evento que se activa cuando un proyectil colisiona con la nave verde
+			if event.type == GREEN_HIT:
+				green_health-=1
 
 			# Evento que se activa para terminar el juego
 			if event.type == pygame.KEYDOWN:
@@ -379,9 +379,9 @@ def main():
 		# 10. Creación de los proyectiles que disparan las naves espaciales ------------
 		# ------------------------------------------------------------------------------
 
-		if len(yellow_bullets) < MAX_BULLETS:	# Umbral de proyectiles activos disparados por la nave amarilla
-			bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height//2 -2, 15, 10)	# Crea un objeto para los proyectiles de la nave amarilla
-			yellow_bullets.append(bullet)	# Almacena los objetos de los proyectiles amarillos en una lista
+		if len(green_bullets) < MAX_BULLETS:	# Umbral de proyectiles activos disparados por la nave verde
+			bullet = pygame.Rect(green.x + green.width, green.y + green.height//2 -2, 15, 10)	# Crea un objeto para los proyectiles de la nave verde
+			green_bullets.append(bullet)	# Almacena los objetos de los proyectiles verdes en una lista
 
 		if len(red_bullets) < MAX_BULLETS:	# Umbral de proyectiles activos disparados por la nave roja
 			bullet = pygame.Rect(red.x, red.y + red.height//2 -2, 15, 10)	# Crea un objeto para los proyectiles de la nave roja
@@ -390,10 +390,10 @@ def main():
 		
 		# Revisa si la vida de la nave roja ha llegado a cero
 		if red_health <= 0:
-			winner_text = "¡GANADOR AMARILLO!"	# Declara al jugador de la nave amarilla como el ganador
+			winner_text = "¡GANADOR VERDE!"	# Declara al jugador de la nave verde como el ganador
 	
-		# Revisa si la vida de la nave amarilla ha llegado a cero
-		if yellow_health <= 0:
+		# Revisa si la vida de la nave verde ha llegado a cero
+		if green_health <= 0:
 			winner_text = "¡GANADOR ROJO!"	# Declara al jugador de la nave roja como el ganador
 
 		# Revisa si el juego ha terminado
@@ -406,11 +406,11 @@ def main():
 		# 11. Control de la posición y movimiento de los objetos en el juego -----------
 		# ------------------------------------------------------------------------------
 
-		yellow_handle_movement(yellow, x_yellow, y_yellow)	# Función que controla la posición de la nave amarilla
+		green_handle_movement(green, x_green, y_green)	# Función que controla la posición de la nave verde
 		red_handle_movement(red, x_red, y_red)	# Función que controla la posición de la nave roja
-		handle_bullets(yellow_bullets, red_bullets, yellow, red)	# Función que controla el estado de los proyectiles disparados por las naves
+		handle_bullets(green_bullets, red_bullets, green, red)	# Función que controla el estado de los proyectiles disparados por las naves
 
-		draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)	# Función que dibuja los objetos en la ventana de juego
+		draw_window(red, green, red_bullets, green_bullets, red_health, green_health)	# Función que dibuja los objetos en la ventana de juego
 
 		# ------------------------------------------------------------------------------
 		# 12. Ventana con la captura de la cámara del computador -----------------------
