@@ -291,11 +291,11 @@ def main():
 
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	# Convierte la captura de la cámara del espacio RGB al espacio HSV
 			
-		low_red = np.array([165 , 100, 160])	# límite inferior para capturar el color rojo en el espacio HSV
+		low_red = np.array([165 , 100, 140])	# límite inferior para capturar el color rojo en el espacio HSV
 		high_red = np.array([200, 250, 250])	# límite superior para capturar el color rojo en el espacio HSV
 
-		low_green = np.array([60, 75, 105])# límite inferior para capturar el color verde en el espacio HSV
-		high_green = np.array([90, 250, 250])# límite superior para capturar el color verde en el espacio HSV
+		low_green = np.array([60, 75, 70])# límite inferior para capturar el color verde en el espacio HSV
+		high_green = np.array([95, 250, 250])# límite superior para capturar el color verde en el espacio HSV
 
 		red_mask = cv2.inRange(hsv, low_red, high_red)	# Máscara que identifica el rango de color rojo especificado - Binariza
 		red_mask = cv2.dilate(red_mask, kernel, iterations = 2)	# Dilata la imagen binarizada con una estructura cuadrada
