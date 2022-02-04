@@ -416,7 +416,7 @@ def main():
 		# 12. Ventana con la captura de la cámara del computador -----------------------
 		# ------------------------------------------------------------------------------
 
-		frame = cv2.line(frame, (640//2-1, 0), (640//2-1, HEIGHT), (0, 0, 0), 2)	# Dibuja una linea en el marco de la imagen capturada
+		#frame = cv2.line(frame, (640//2-1, 0), (640//2-1, HEIGHT), (0, 0, 0), 2)	# Dibuja una linea en el marco de la imagen capturada
 		cv2.imshow("frame", frame)	# Muestra la imágen capturada por la cámara
 
 		# Mecanismo para cerrar la ejecución del programa usando openCV
