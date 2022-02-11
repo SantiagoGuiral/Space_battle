@@ -1,23 +1,28 @@
-Bienvenidos al manual de ejecución de Batalla Espacial
+Bienvenidos al manual de ejecución del juego Batalla Espacial
 
 Escrito por:
 Santiago Ríos Guiral
+santiago.riosg@udea.edu.co
 Emmanuel Gomez Ospina
+emmanuel.gomez@udea.edu.co
+
+
 
 Pasos para ejecutar el juego.
 
 1. Instalar las librerías necesarias para ejecutar.
 
+pip install numpy
 pip install pygame
 pip install opencv-python
 
-2. Inicia la ejecución del juego.
+2. Iniciar la ejecución del juego.
 
-En la consola de sistemas operativos Linux o en la terminal de Windows:
+En la consola de sistemas operativos Linux o en la terminal de Windows ejecutar la siguiente linea:
 python batalla_espacial.py
 
 En un entorno de desarrollo:
-Dar click en el botón de ejecución
+Dar click en el botón de inicio de ejecución
 
-3. Empieza a jugar. Se requieren dos objetos para manipular las naves espaciales, uno de color amarillo y otro de color rojo. Ambos objetos deben tener un área mínima de 5 centímetros cuadrados.
+3. Empieza a jugar. Se requieren dos objetos para manipular las naves espaciales, uno de color amarillo y otro de color rojo. Ambos objetos deben tener un área mínima de 6 centimetros cuadrados.
 
